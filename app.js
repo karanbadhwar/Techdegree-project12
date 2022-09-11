@@ -22,7 +22,7 @@ app.use(morgan('dev'));
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
-    await sequelize.sync({ force: true});
+    await sequelize.sync();
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
@@ -50,7 +50,13 @@ app.use((err, req, res, next) => {
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
+  // console.log('vioooo')
+  // console.log(err.errors[0].type === 'SequelizeUniqueConstraintError');
 
+  if (err.errors[0].type === 'Validation error' || 'notNull Violation' || 'SequelizeUniqueConstraintError'){
+    err.status = 400;
+  }
+  console.log(err.errors[0].type)
   res.status(err.status || 500).json({
     message: err.message,
     error: {},
