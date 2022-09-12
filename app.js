@@ -50,8 +50,8 @@ app.use((err, req, res, next) => {
   if (enableGlobalErrorLogging) {
     console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
   }
-  // console.log('vioooo')
-  // console.log(err.errors[0].type === 'SequelizeUniqueConstraintError');
+
+  console.log(err.errors[0]);
 
   if (err.errors[0].type === 'Validation error' || 'notNull Violation' || 'SequelizeUniqueConstraintError'){
     err.status = 400;
