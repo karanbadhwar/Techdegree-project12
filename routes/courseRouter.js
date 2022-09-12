@@ -15,8 +15,23 @@ function asyncHandler(cb) {
 // fetching all the Courses list
 router.get(
   "/",
+  authenticateUser,
   asyncHandler(async (req, res) => {
+    const userEmail = req.currentUser.emailAddress;
+    console.log(userEmail);
+    const user = await User.findOne({ where:{ emailAddress: userEmail } });
+    console.log(user);
     const courses = await Course.findAll({
+      where: { userId: user.id },
+      include: {
+        model: User,
+        as: 'User',
+        attributes:[
+            'firstName',
+            'lastName',
+            'emailAddress'
+        ]
+      },
       attributes: [
         "id",
         "title",
@@ -26,7 +41,6 @@ router.get(
         "userId",
       ],
     });
-    // console.log(courses);
     if (courses.length > 0) {
       res.status(200).json({ courses });
     } else {
@@ -96,7 +110,7 @@ router.post(
           materialsNeeded: values.materialsNeeded,
           userId: values.userId,
         });
-        res.location(`/${course.id}`);
+        res.location(`/courses/${course.id}`);
         res.status(201).end();
       }
 

@@ -52,6 +52,7 @@ app.use((err, req, res, next) => {
   }
 
   console.log(err.errors[0]);
+  console.log(err);
 
   if (err.errors[0].type === 'Validation error' || 'notNull Violation' || 'SequelizeUniqueConstraintError'){
     err.status = 400;

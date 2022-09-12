@@ -43,7 +43,6 @@ router.get('/', authenticateUser ,asyncHandler(async(req,res) =>{
 // Creating a User Data
 router.post('/', asyncHandler( async(req,res) =>{
     const values = req.body;
-    const hashedPass = bcrypt.hashSync(values.password, 10);
     let errors = [];
     if (!values.firstName){
         errors.push('Please provide a value for First Name!');
@@ -60,6 +59,7 @@ router.post('/', asyncHandler( async(req,res) =>{
     if (errors.length > 0){
         res.status(400).json({ errors });
     } else {
+        const hashedPass = bcrypt.hashSync(values.password, 10);
         const user = await User.create({
             firstName: values.firstName,
             lastName: values.lastName,
