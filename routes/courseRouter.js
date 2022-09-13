@@ -15,14 +15,8 @@ function asyncHandler(cb) {
 // fetching all the Courses list
 router.get(
   "/",
-  authenticateUser,
   asyncHandler(async (req, res) => {
-    const userEmail = req.currentUser.emailAddress;
-    console.log(userEmail);
-    const user = await User.findOne({ where:{ emailAddress: userEmail } });
-    console.log(user);
     const courses = await Course.findAll({
-      where: { userId: user.id },
       include: {
         model: User,
         as: 'User',
